@@ -17,7 +17,7 @@ Analyser et modéliser la consommation énergétique d'un drone quadricoptère �
 - Séparation train/test (70/30) et normalisation (StandardScaler)
 
 **2. Modélisation**
-Cinq familles de modèles testées et comparées sur RMSE, MAE et R² : Régression linéaire,Régression polynomiale (deg. 4) ,SVR (optimisé GridSearchCV),Réseaux de neurones (MLP), Random Forest
+Cinq familles de modèles testées et comparées sur RMSE, MAE et R² : Régression linéaire, Régression polynomiale (deg. 4), SVR (optimisé GridSearchCV), Réseaux de neurones (MLP), Random Forest.
 
 ## Résultat
 Le **Random Forest** est le modèle retenu, avec le RMSE le plus faible et un R² de 0.967 (confirmé par validation croisée à 5 folds, R² moyen = 0.965). Il capture bien les relations non linéaires entre les paramètres de vol et la consommation, tout en restant robuste au bruit.
