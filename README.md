@@ -1,19 +1,38 @@
-# Prédiction de la consommation énergétique d'un drone
+# Prédiction de la consommation énergétique d'un drone UAV
 
 ## Contexte
-Projet académique de Machine Learning réalisé dans le cadre de mon double diplôme d'ingénieur à l'ISAE-SUPMECA.
+Projet académique de Machine Learning réalisé à l'ISAE-SUPMECA.
 
 ## Objectif
-Prédire la consommation énergétique d'un drone à partir de données de vol, afin d'anticiper l'autonomie selon les conditions d'utilisation.
+Analyser et modéliser la consommation énergétique d'un drone quadricoptère à partir de données réelles de vol (209 vols, ~258 000 mesures à 5 Hz), afin de prédire la puissance consommée en fonction des paramètres de vol (vitesse, altitude, charge transportée, vent, orientation, accélérations...).
 
-## Ce que j'ai fait
-- Feature engineering et traitement des données de vol
-- Modélisation prédictive et sélection du modèle le plus performant
-- Évaluation des résultats (métriques de précision, comparaison de modèles)
+## Démarche
+
+**1. Préparation des données**
+- Vérification des valeurs manquantes (aucune détectée)
+- Création de la variable cible `puissance` = tension × courant de la batterie
+- Nettoyage de la colonne `altitude` (conversion des intervalles en valeurs moyennes)
+- Feature engineering : fusion des composantes de vitesse (`velocity_x/y/z`) en une norme unique `velocity`
+- Suppression des variables non informatives (`route`, `flight`, `time`) pour limiter le risque de surapprentissage
+- Séparation train/test (70/30) et normalisation (StandardScaler)
+
+**2. Modélisation**
+Cinq familles de modèles testées et comparées sur RMSE, MAE et R² :
+
+| Modèle | RMSE | R² | Temps d'entraînement |
+|---|---|---|---|
+| Régression linéaire | 162.80 | 0.526 | 0.13 s |
+| Régression polynomiale (deg. 4) | 73.44 | 0.904 | — |
+| SVR (optimisé GridSearchCV) | 74.06 | 0.902 | — |
+| Réseaux de neurones (MLP) | 59.62 | 0.936 | 87 s |
+| **Random Forest** | **43.25** | **0.967** | 506 s |
+
+## Résultat
+Le **Random Forest** est le modèle retenu, avec le RMSE le plus faible et un R² de 0.967 (confirmé par validation croisée à 5 folds, R² moyen = 0.965). Il capture bien les relations non linéaires entre les paramètres de vol et la consommation, tout en restant robuste au bruit.
 
 ## Outils
-Python, Pandas, NumPy, Scikit-learn
+Python, Pandas, NumPy, Matplotlib, Scikit-learn (LinearRegression, PolynomialFeatures, MLPRegressor, RandomForestRegressor, SVR, GridSearchCV)
 
 ## Livrables
-💻 [Notebook / Code](./projet_DATA-ASSEF.html)# drone-energy-prediction
 📊 [Présentation du projet](./presentation-projet.pptx)
+📄 [Rapport détaillé (PDF)](./projet_DATA.pdf)
